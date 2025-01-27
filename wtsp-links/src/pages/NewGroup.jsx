@@ -61,7 +61,7 @@ const NewGroup = () => {
       <Navbar />
       <div className=" p-8 min-h-screen">
         <div className="flex justify-center items-center h-full">
-          <div className="max-w-lg w-full p-8 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 bg-opacity-80 rounded-lg shadow-2xl">
+          <div className="max-w-lg w-full p-8  rounded-lg shadow-2xl">
             <h1 className="text-3xl font-semibold text-center text-white mb-6">
               Share a New Group
             </h1>
