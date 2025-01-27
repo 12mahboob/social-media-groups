@@ -28,7 +28,6 @@ export default function Login() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // Email validation
     const isValidEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         return emailRegex.test(email);
@@ -70,7 +69,7 @@ export default function Login() {
 
             if (data.user) {
                 setMessage("Login successful!");
-                navigate('/profile'); // Redirect to notes page after login
+                navigate('/profile');
             }
         } catch (error) {
             setError(error.message);
@@ -89,82 +88,80 @@ export default function Login() {
     };
 
     return (
-        <div className="w-full max-w-md bg-gray-800/80 backdrop-blur-lg rounded-lg shadow-lg p-8">
-            <h1 className="text-2xl font-bold text-center mb-6">
-                {isSignUp ? "Create an Account" : isForgotPassword ? "Reset Password" : "Welcome Back"}
-            </h1>
+        <div className="min-h-screen flex items-center justify-center bg-gray-900">
+            <div className="w-full max-w-md bg-gray-800/80 backdrop-blur-md rounded-lg shadow-xl p-8">
+                <h1 className="text-2xl font-bold text-center text-white mb-6">
+                    {isSignUp ? "Create an Account" : isForgotPassword ? "Reset Password" : "Welcome Back"}
+                </h1>
 
-            {/* Form */}
-            <div className="space-y-4">
-                <input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full py-3 px-4 bg-gray-700 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                {!isForgotPassword && (
+                <div className="space-y-4">
                     <input
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full py-3 px-4 bg-gray-700 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full py-3 px-4 bg-gray-700 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
-                )}
-            </div>
+                    {!isForgotPassword && (
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full py-3 px-4 bg-gray-700 text-white rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                    )}
+                </div>
 
-            {/* Action Buttons */}
-            <div className="mt-6 space-y-4">
-                {isForgotPassword ? (
-                    <button
-                        onClick={handleForgotPassword}
-                        className="w-full py-3 bg-green-600 rounded-lg hover:bg-green-700 transition focus:ring-2 focus:ring-green-400"
-                    >
-                        Send Reset Email
-                    </button>
-                ) : (
-                    <button
-                        onClick={isSignUp ? handleSignUp : handleSignIn}
-                        className="w-full py-3 bg-green-600 rounded-lg hover:bg-green-700 transition focus:ring-2 focus:ring-green-400"
-                    >
-                        {isSignUp ? "Sign Up" : "Sign In"}
-                    </button>
-                )}
-            </div>
-
-            {/* Error and Success Messages */}
-            {error && <p className="mt-4 text-red-400 text-sm">{error}</p>}
-            {message && <p className="mt-4 text-green-400 text-sm">{message}</p>}
-
-            {/* Toggle Links */}
-            <div className="mt-6 text-center">
-                {isForgotPassword ? (
-                    <button
-                        onClick={() => setIsForgotPassword(false)}
-                        className="text-green-400 hover:underline"
-                    >
-                        Back to Login
-                    </button>
-                ) : (
-                    <div>
+                <div className="mt-6 space-y-4">
+                    {isForgotPassword ? (
                         <button
-                            onClick={() => setIsForgotPassword(true)}
+                            onClick={handleForgotPassword}
+                            className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition focus:ring-2 focus:ring-green-400"
+                        >
+                            Send Reset Email
+                        </button>
+                    ) : (
+                        <button
+                            onClick={isSignUp ? handleSignUp : handleSignIn}
+                            className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition focus:ring-2 focus:ring-green-400"
+                        >
+                            {isSignUp ? "Sign Up" : "Sign In"}
+                        </button>
+                    )}
+                </div>
+
+                {error && <p className="mt-4 text-red-400 text-sm">{error}</p>}
+                {message && <p className="mt-4 text-green-400 text-sm">{message}</p>}
+
+                <div className="mt-6 text-center">
+                    {isForgotPassword ? (
+                        <button
+                            onClick={() => setIsForgotPassword(false)}
                             className="text-green-400 hover:underline"
                         >
-                            Forgot Password?
+                            Back to Login
                         </button>
-                        <p className="mt-2">
-                            {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+                    ) : (
+                        <div>
                             <button
-                                onClick={() => setIsSignUp(!isSignUp)}
+                                onClick={() => setIsForgotPassword(true)}
                                 className="text-green-400 hover:underline"
                             >
-                                {isSignUp ? "Sign In" : "Sign Up"}
+                                Forgot Password?
                             </button>
-                        </p>
-                    </div>
-                )}
+                            <p className="mt-2">
+                                {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+                                <button
+                                    onClick={() => setIsSignUp(!isSignUp)}
+                                    className="text-green-400 hover:underline"
+                                >
+                                    {isSignUp ? "Sign In" : "Sign Up"}
+                                </button>
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
