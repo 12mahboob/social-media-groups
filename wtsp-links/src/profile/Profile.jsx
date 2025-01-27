@@ -55,28 +55,28 @@ const ProfileEdit = ({ profile, loading, onSave, onCancel }) => {
         value={formData.username}
         onChange={handleChange}
         placeholder="Username"
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        className="w-full p-3 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
       />
       <input
         name="full_name"
         value={formData.full_name}
         onChange={handleChange}
         placeholder="Full Name"
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        className="w-full p-3 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
       />
       <input
         name="avatar_url"
         value={formData.avatar_url}
         onChange={handleChange}
         placeholder="Avatar URL"
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        className="w-full p-3 border text-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
       />
       <textarea
         name="bio"
         value={formData.bio}
         onChange={handleChange}
         placeholder="Bio"
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        className="w-full p-3 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
       />
       <div className="flex space-x-4">
         <button
