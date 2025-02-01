@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { supabase } from "../config/supabaseClient"; // Import the Supabase client
+import React, { useState, useEffect, useCallback } from "react";
+import { supabase } from "../config/supabaseClient";
 
 const AdminPanel = () => {
   const [email, setEmail] = useState("");
@@ -12,33 +12,35 @@ const AdminPanel = () => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [groupData, setGroupData] = useState({ name: "", description: "", link: "", category_id: "" });
 
-  const [bulkUploadData, setBulkUploadData] = useState(""); // For bulk upload
-  const [isBulkUpload, setIsBulkUpload] = useState(false); // Toggle between single and bulk upload
+  const [bulkUploadData, setBulkUploadData] = useState("");
+  const [isBulkUpload, setIsBulkUpload] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState(null);
 
+  // Fetch categories and groups
+  const fetchCategoriesAndGroups = useCallback(async () => {
+    setLoading(true);
+    const categoriesData = await supabase.from("categories").select("*");
+    const groupsData = await supabase.from("groups").select("*");
+
+    if (categoriesData.error || groupsData.error) {
+      setMessage({ type: "error", text: "Error fetching data." });
+    } else {
+      setCategories(categoriesData.data);
+      setGroups(groupsData.data);
+    }
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
     if (isLoggedIn) {
-      const fetchCategoriesAndGroups = async () => {
-        setLoading(true);
-        const categoriesData = await supabase.from("categories").select("*");
-        const groupsData = await supabase.from("groups").select("*");
-
-        if (categoriesData.error || groupsData.error) {
-          setMessage({ type: "error", text: "Error fetching data." });
-        } else {
-          setCategories(categoriesData.data);
-          setGroups(groupsData.data);
-        }
-        setLoading(false);
-      };
-
       fetchCategoriesAndGroups();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, fetchCategoriesAndGroups]);
 
+  // Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -57,16 +59,25 @@ const AdminPanel = () => {
     }
   };
 
+  // Handle logout
   const handleLogout = () => {
     setIsLoggedIn(false);
     setMessage({ type: "success", text: "Logged out successfully!" });
   };
 
+  // Handle edit
   const handleEdit = (group) => {
     setSelectedGroup(group);
     setGroupData({ name: group.name, description: group.description, link: group.link, category_id: group.category_id });
   };
 
+  // Handle delete confirmation
+  const confirmDelete = (group) => {
+    setGroupToDelete(group);
+    setShowConfirm(true);
+  };
+
+  // Handle delete
   const handleDelete = async () => {
     if (groupToDelete) {
       const { error } = await supabase.from("groups").delete().eq("id", groupToDelete.id);
@@ -74,13 +85,14 @@ const AdminPanel = () => {
         setMessage({ type: "error", text: "Error deleting group: " + error.message });
       } else {
         setMessage({ type: "success", text: "Group deleted successfully!" });
-        setGroups(groups.filter((group) => group.id !== groupToDelete.id));
+        fetchCategoriesAndGroups(); // Refresh groups
       }
       setShowConfirm(false);
       setGroupToDelete(null);
     }
   };
 
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -95,6 +107,7 @@ const AdminPanel = () => {
         setMessage({ type: "error", text: "Error updating group: " + error.message });
       } else {
         setMessage({ type: "success", text: "Group updated successfully!" });
+        fetchCategoriesAndGroups(); // Refresh groups
         setSelectedGroup(null);
         setGroupData({ name: "", description: "", link: "", category_id: "" });
       }
@@ -104,11 +117,13 @@ const AdminPanel = () => {
         setMessage({ type: "error", text: "Error adding group: " + error.message });
       } else {
         setMessage({ type: "success", text: "Group added successfully!" });
+        fetchCategoriesAndGroups(); // Refresh groups
         setGroupData({ name: "", description: "", link: "", category_id: "" });
       }
     }
   };
 
+  // Handle bulk upload
   const handleBulkUpload = async () => {
     try {
       const bulkDataArray = bulkUploadData.split("\n").map((line) => {
@@ -121,8 +136,8 @@ const AdminPanel = () => {
         setMessage({ type: "error", text: "Error uploading groups: " + error.message });
       } else {
         setMessage({ type: "success", text: "Bulk groups uploaded successfully!" });
+        fetchCategoriesAndGroups(); // Refresh groups
         setBulkUploadData("");
-        setGroups([...groups, ...bulkDataArray]); // Update local groups state
       }
     } catch (err) {
       setMessage({ type: "error", text: "Error parsing bulk upload data. Please check the format." });
@@ -259,6 +274,73 @@ const AdminPanel = () => {
                 </button>
               </div>
             )}
+
+            {/* Groups List */}
+            <div className="mt-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Groups</h2>
+              {loading ? (
+                <p className="text-center text-gray-600">Loading...</p>
+              ) : (
+                <div className="space-y-4">
+                  {groups.map((group) => (
+                    <div key={group.id} className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-800">{group.name}</h3>
+                      <p className="text-sm text-gray-600">{group.description}</p>
+                      <a href={group.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        Visit Group
+                      </a>
+                      <div className="mt-2 flex space-x-2">
+                        <button
+                          onClick={() => handleEdit(group)}
+                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => confirmDelete(group)}
+                          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Logout Button */}
+            <div className="mt-8">
+              <button
+                onClick={handleLogout}
+                className="w-full py-3 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-800">Are you sure you want to delete this group?</h3>
+              <div className="mt-4 flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowConfirm(false)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
