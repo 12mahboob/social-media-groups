@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as XLSX from "xlsx";
-import { supabase } from "../config/supabaseClient";
-
+import { supabase } from "../../config/supabaseClient";
 const BulkUpload = ({ setIsBulkUpload }) => {
   const [inputData, setInputData] = useState(""); // For pasted CSV content
   const [file, setFile] = useState(null); // For file upload
