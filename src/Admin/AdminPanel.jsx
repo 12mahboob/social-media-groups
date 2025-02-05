@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../config/supabaseClient";
-import BulkUpload from "./BulkUpload";
+import BulkUpload from "./Bulkupload";
 
 import {
   FiMenu,
