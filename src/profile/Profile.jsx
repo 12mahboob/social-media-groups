@@ -3,7 +3,7 @@ import { supabase } from "../config/supabaseClient";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Components/NavBar";
+import Navbar from "../Components/Navbar";
 
 // Sub-components
 const ProfileView = ({ profile, onEdit }) => (
