@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from './Index/Home';  // Adjust paths as needed
-import Login from "./login/login";
+import Login from "./Login/Login";
 import Profile from "./profile/Profile";
 // import CategoryPage from "./pages/CategoryPage";
 import Groups from "./pages/JoinGroups";
