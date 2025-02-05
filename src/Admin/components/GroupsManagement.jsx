@@ -1,6 +1,6 @@
 import React from "react";
 import { FiPlusCircle, FiUpload } from "react-icons/fi";
-import BulkUpload from "./BulkUpload";
+import BulkUpload from "./Bulkupload";
 
 const GroupsManagement = ({ groups, showAddForm, setShowAddForm, setIsBulkUpload, isBulkUpload }) => {
   return (
