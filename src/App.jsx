@@ -6,7 +6,7 @@ import Profile from "./profile/Profile";
 import CategoryPage from "./pages/CategoryPage";
 import Groups from "./pages/JoinGroups";
 import NewGroup from "./pages/NewGroup";
-import Admin from "./pages/AdminPanel";
+import Admin from "./Admin/AdminPanel";
 import Background from "./background/Background";  // Ensure correct import path
 
 export default function App() {

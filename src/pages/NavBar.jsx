@@ -25,13 +25,6 @@ const Navbar = () => {
           >
             Add Group
           </Link>
-           <Link
-            to="/admin"
-            className="text-white text-lg hover:text-gray-200 transition duration-300"
-          >
-            Admin Panel
-          </Link>
-         
         </div>
       </div>
     </nav>
