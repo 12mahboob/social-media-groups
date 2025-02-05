@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../config/supabaseClient";
+import BulkUpload from "./BulkUpload";
+
 import {
   FiMenu,
   FiX,
@@ -29,7 +31,7 @@ const AdminPanel = () => {
     theme: 'light', // or 'dark'
     notificationsEnabled: false,
   });
-
+  
   const handleThemeChange = (e) => {
     setSettings({
       ...settings,
@@ -37,7 +39,7 @@ const AdminPanel = () => {
     });
     // You can also store the theme preference in localStorage or context if needed
   };
-
+  
   const handleNotificationsChange = (e) => {
     setSettings({
       ...settings,
@@ -45,13 +47,13 @@ const AdminPanel = () => {
     });
     // You can implement API calls or other logic to handle notification settings
   };
-
+  
   const handleSettingsSubmit = (e) => {
     e.preventDefault();
     // Logic to save the settings, such as sending them to a backend or saving them locally
     setShowSettingsForm(false); // Close the form after submitting
   };
-
+  
   const fetchUsers = useCallback(async () => {
     try {
       const { data: users } = await supabase.from("users").select("*");
@@ -210,8 +212,9 @@ const AdminPanel = () => {
 
       {/* Sidebar (unchanged) */}
       <aside
-        className={`fixed top-16 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md transition-all duration-300 ${sidebarOpen ? "w-64" : "w-16"
-          }`}
+        className={`fixed top-16 left-0 h-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md transition-all duration-300 ${
+          sidebarOpen ? "w-64" : "w-16"
+        }`}
       >
         <div className="p-4 space-y-2">
           <button className="w-full flex items-center p-3 text-white hover:bg-indigo-700 rounded-lg">
@@ -222,7 +225,7 @@ const AdminPanel = () => {
             <FiUsers className="flex-shrink-0" size={20} />
             {sidebarOpen && <span className="ml-3">Users</span>}
           </button>
-          <button
+          <button 
             onClick={() => setShowSettingsForm(true)}
             className="w-full flex items-center p-3 text-white hover:bg-indigo-700 rounded-lg"
           >
@@ -234,8 +237,9 @@ const AdminPanel = () => {
 
       {/* Main Content */}
       <main
-        className={`pt-20 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-16"
-          } min-h-screen p-8`}
+        className={`pt-20 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-16"
+        } min-h-screen p-8`}
       >
         {!isLoggedIn ? (
           <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500">
@@ -250,10 +254,11 @@ const AdminPanel = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className={`p-4 rounded-lg ${message.type === "error"
+                    className={`p-4 rounded-lg ${
+                      message.type === "error"
                         ? "bg-red-100 text-red-700"
                         : "bg-green-100 text-green-700"
-                      }`}
+                    }`}
                   >
                     {message.text}
                   </motion.div>
@@ -337,49 +342,9 @@ const AdminPanel = () => {
             </div>
 
             {/* Bulk Upload Form */}
-            {isBulkUpload && (
-              <AnimatePresence>
-                <motion.div
-                  className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <motion.div
-                    className="bg-gray-800 p-6 rounded-lg w-96 shadow-xl"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.8 }}
-                  >
-                    <h2 className="text-2xl font-bold text-white mb-6">
-                      Bulk Upload
-                    </h2>
-                    <textarea
-                      value={bulkUploadData}
-                      onChange={(e) => setBulkUploadData(e.target.value)}
-                      placeholder="Enter group data (name, description, link, category_id)"
-                      rows="10"
-                      className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 text-black mb-4"
-                    />
-                    <div className="flex justify-between items-center">
-                      <button
-                        type="button"
-                        onClick={() => setIsBulkUpload(false)}
-                        className="w-1/3 bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={handleBulkUpload}
-                        className="w-1/3 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700"
-                      >
-                        Upload
-                      </button>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </AnimatePresence>
-            )}
+            {isBulkUpload &&
+             <BulkUpload setIsBulkUpload={setIsBulkUpload} />
+             }
 
             {/* Add/Edit Group Form (with improved style) */}
             <AnimatePresence>
@@ -545,7 +510,7 @@ const AdminPanel = () => {
                 ))}
               </AnimatePresence>
             </div>
-
+                
             {/* Confirmation Modal for Deleting Group (unchanged) */}
             {showConfirm && (
               <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -571,86 +536,86 @@ const AdminPanel = () => {
               </div>
             )}
 
-            <AnimatePresence>
-              {showSettingsForm && (
-                <motion.div
-                  className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <motion.div
-                    className="bg-gray-800 p-6 rounded-lg w-96 shadow-xl"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.8 }}
-                  >
-                    <form onSubmit={handleSettingsSubmit} className="space-y-4">
-                      {/* Theme Toggle */}
-                      <div>
-                        <label className="block text-sm font-medium text-white mb-1">
-                          Dark Mode
-                        </label>
-                        <div className="flex items-center">
-                          <label htmlFor="theme-toggle" className="mr-3 text-white">
-                            Light
-                          </label>
-                          <input
-                            type="checkbox"
-                            id="theme-toggle"
-                            checked={settings.theme === 'dark'}
-                            onChange={handleThemeChange}
-                            className="w-6 h-6 rounded-full bg-gray-600"
-                          />
-                          <label htmlFor="theme-toggle" className="ml-3 text-white">
-                            Dark
-                          </label>
-                        </div>
-                      </div>
+<AnimatePresence>
+  {showSettingsForm && (
+    <motion.div
+      className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-gray-800 p-6 rounded-lg w-96 shadow-xl"
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.8 }}
+      >
+        <form onSubmit={handleSettingsSubmit} className="space-y-4">
+          {/* Theme Toggle */}
+           <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Dark Mode
+            </label>
+            <div className="flex items-center">
+              <label htmlFor="theme-toggle" className="mr-3 text-white">
+                Light
+              </label>
+              <input
+                type="checkbox"
+                id="theme-toggle"
+                checked={settings.theme === 'dark'}
+                onChange={handleThemeChange}
+                className="w-6 h-6 rounded-full bg-gray-600"
+              />
+              <label htmlFor="theme-toggle" className="ml-3 text-white">
+                Dark
+              </label>
+            </div>
+          </div>
 
-                      {/* Notifications Toggle */}
-                      <div>
-                        <label className="block text-sm font-medium text-white mb-1">
-                          Email Notifications
-                        </label>
-                        <div className="flex items-center">
-                          <label htmlFor="notifications-toggle" className="mr-3 text-white">
-                            Off
-                          </label>
-                          <input
-                            type="checkbox"
-                            id="notifications-toggle"
-                            checked={settings.notificationsEnabled}
-                            onChange={handleNotificationsChange}
-                            className="w-6 h-6 rounded-full bg-gray-600"
-                          />
-                          <label htmlFor="notifications-toggle" className="ml-3 text-white">
-                            On
-                          </label>
-                        </div>
-                      </div>
+          {/* Notifications Toggle */}
+           <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Email Notifications
+            </label>
+            <div className="flex items-center">
+              <label htmlFor="notifications-toggle" className="mr-3 text-white">
+                Off
+              </label>
+              <input
+                type="checkbox"
+                id="notifications-toggle"
+                checked={settings.notificationsEnabled}
+                onChange={handleNotificationsChange}
+                className="w-6 h-6 rounded-full bg-gray-600"
+              />
+              <label htmlFor="notifications-toggle" className="ml-3 text-white">
+                On
+              </label>
+            </div>
+          </div>
 
-
-                      <div className="flex justify-between items-center">
-                        <button
-                          type="button"
-                          onClick={() => setShowSettingsForm(false)}
-                          className="w-1/3 bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          className="w-1/3 bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700"
-                        >
-                          Save Settings
-                        </button>
-                      </div>
-                    </form>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        
+           <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => setShowSettingsForm(false)}
+              className="w-1/3 bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-1/3 bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700"
+            >
+              Save Settings
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
           </>
         )}
