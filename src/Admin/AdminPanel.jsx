@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
 import GroupsManagement from "./components/GroupsManagement";
 import Settings from "./components/Settings";
-import Bulkupload from "../components/Bulkupload";
+import Bulkupload from "./components/Bulkupload";
 
 const AdminPanel = () => {
   // States
