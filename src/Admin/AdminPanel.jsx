@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
 import GroupsManagement from "./components/GroupsManagement";
 import Settings from "./components/Settings";
-import BulkUpload from "./components/BulkUpload";
+import Bulkupload from "./Bulkupload";
 
 const AdminPanel = () => {
   // States
@@ -83,8 +83,8 @@ const AdminPanel = () => {
               groups={groups} 
               showAddForm={showAddForm} 
               setShowAddForm={setShowAddForm} 
-              isBulkUpload={isBulkUpload} 
-              setIsBulkUpload={setIsBulkUpload} 
+              isBulkupload={isBulkupload} 
+              setIsBulkupload={setIsBulkupload} 
             />
 
             {/* Settings Modal */}
