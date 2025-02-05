@@ -1,9 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from './Index/Home';  // Adjust paths as needed
-import Login from "./pages/Login";
+import Login from "./Login/Login";
 import Profile from "./profile/Profile";
-import CategoryPage from "./pages/CategoryPage";
+// import CategoryPage from "./pages/CategoryPage";
 import Groups from "./pages/JoinGroups";
 import NewGroup from "./pages/NewGroup";
 import Admin from "./Admin/AdminPanel";
@@ -18,7 +18,7 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/groups" element={<Groups />} />
         <Route path="/groups/new" element={<NewGroup />} />
-        <Route path="/category/:categoryId" element={<CategoryPage />} />
+        {/* <Route path="/category/:categoryId" element={<CategoryPage />} /> */}
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </Background>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../config/supabaseClient"; // Import the Supabase client
-import Navbar from "./NavBar";
+import Navbar from "../Components/NavBar";
 
 const NewGroup = () => {
   const [categories, setCategories] = useState([]); // To store categories

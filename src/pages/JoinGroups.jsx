@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../config/supabaseClient"; // Import the Supabase client
-import Navbar from "./NavBar";
+import Navbar from "../Components/NavBar";
 import { Link } from 'react-router-dom';
 
 const JoinGroups = () => {
