@@ -62,6 +62,7 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500">
       {/* Navigation Bar */}
+      <main>
       <Navigation 
         sidebarOpen={sidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
