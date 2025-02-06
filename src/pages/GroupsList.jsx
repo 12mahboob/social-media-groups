@@ -4,31 +4,29 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch groups and categories from the database
-  const fetchGroupsAndCategories = async () => {
+  // Fetch groups with their category names from the database
+  const fetchGroups = async () => {
     setLoading(true);
     try {
-      // Fetch groups with their category information
-      const { data: groups } = await supabase
+      // Fetch groups with their category names using a join
+      const { data: groups, error } = await supabase
         .from("groups")
-        .select("*, categories(name)");
+        .select("*, categories(name)") // Join with categories table
+        .order("category_id", { ascending: true }); // Optional: Sort by category_id
 
-      // Fetch all categories
-      const { data: categories } = await supabase.from("categories").select("*");
+      if (error) throw error;
 
       setGroups(groups);
-      setCategories(categories);
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      console.error("Error fetching groups:", error.message);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchGroupsAndCategories();
+    fetchGroups();
   }, []);
 
   // Handle join button click
@@ -39,11 +37,15 @@ const GroupsList = () => {
   // Group groups by category
   const groupGroupsByCategory = () => {
     const grouped = {};
-    categories.forEach((category) => {
-      grouped[category.id] = {
-        name: category.name,
-        groups: groups.filter((group) => group.category_id === category.id),
-      };
+    groups.forEach((group) => {
+      const categoryId = group.category_id;
+      if (!grouped[categoryId]) {
+        grouped[categoryId] = {
+          name: group.categories?.name || "Uncategorized",
+          groups: [],
+        };
+      }
+      grouped[categoryId].groups.push(group);
     });
     return grouped;
   };
@@ -58,14 +60,14 @@ const GroupsList = () => {
         <div className="text-white">Loading...</div>
       ) : (
         <div className="space-y-8">
-          {categories.map((category) => (
-            <div key={category.id}>
+          {Object.keys(groupedGroups).map((categoryId) => (
+            <div key={categoryId}>
               <h3 className="text-xl font-semibold text-white mb-4">
-                {category.name}
+                {groupedGroups[categoryId].name}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <AnimatePresence>
-                  {groupedGroups[category.id]?.groups.map((group) => (
+                  {groupedGroups[categoryId].groups.map((group) => (
                     <motion.div
                       key={group.id}
                       initial={{ opacity: 0, y: 20 }}
