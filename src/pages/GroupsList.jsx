@@ -18,10 +18,10 @@ const GroupsList = () => {
 
       if (categoriesError) throw categoriesError;
 
-      // Fetch groups with their category names using a proper join
+      // Fetch groups with their category names using a join
       const { data: groups, error: groupsError } = await supabase
         .from("groups")
-        .select("*, categories!inner(name)")
+        .select("*, categories(name)")
         .order("category_id", { ascending: true });
 
       if (groupsError) throw groupsError;
@@ -128,4 +128,3 @@ const GroupsList = () => {
 };
 
 export default GroupsList;
-
