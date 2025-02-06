@@ -79,13 +79,13 @@ const AdminPanel = () => {
           <Login email={email} setEmail={setEmail} password={password} setPassword={setPassword} handleLogin={handleLogin} message={message} />
         ) : (
           <>
-            <GroupsManagement 
-              groups={groups} 
-              showAddForm={showAddForm} 
-              setShowAddForm={setShowAddForm} 
-              isBulkupload={isBulkupload} 
-              setIsBulkupload={setIsBulkupload} 
-            />
+           <GroupsManagement 
+  groups={groups} 
+  showAddForm={showAddForm} 
+  setShowAddForm={setShowAddForm} 
+  isBulkUpload={isBulkUpload}  // 🔴 یہاں درست کیا
+  setIsBulkUpload={setIsBulkUpload}  
+/>
 
             {/* Settings Modal */}
             <AnimatePresence>
