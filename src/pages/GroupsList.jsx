@@ -4,29 +4,39 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch groups with their category names from the database
-  const fetchGroups = async () => {
+  // Fetch groups and categories from the database
+  const fetchGroupsAndCategories = async () => {
     setLoading(true);
     try {
-      // Fetch groups with their category names using a join
-      const { data: groups, error } = await supabase
-        .from("groups")
-        .select("*, categories(name)") // Join with categories table
-        .order("category_id", { ascending: true }); // Optional: Sort by category_id
+      // Fetch all categories
+      const { data: categories, error: categoriesError } = await supabase
+        .from("categories")
+        .select("*");
 
-      if (error) throw error;
+      if (categoriesError) throw categoriesError;
+
+      // Fetch groups with their category names using a proper join
+      const { data: groups, error: groupsError } = await supabase
+        .from("groups")
+        .select("*, categories(name)")
+        .eq("categories.id", "category_id")
+        .order("category_id", { ascending: true });
+
+      if (groupsError) throw groupsError;
 
       setGroups(groups);
+      setCategories(categories);
     } catch (error) {
-      console.error("Error fetching groups:", error.message);
+      console.error("Error fetching data:", error.message);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchGroups();
+    fetchGroupsAndCategories();
   }, []);
 
   // Handle join button click
@@ -37,16 +47,31 @@ const GroupsList = () => {
   // Group groups by category
   const groupGroupsByCategory = () => {
     const grouped = {};
+
+    // Add a default "Uncategorized" category
+    grouped["uncategorized"] = {
+      name: "Uncategorized",
+      groups: [],
+    };
+
+    // Map categories to their respective groups
+    categories.forEach((category) => {
+      grouped[category.id] = {
+        name: category.name,
+        groups: [],
+      };
+    });
+
+    // Assign groups to their respective categories
     groups.forEach((group) => {
       const categoryId = group.category_id;
-      if (!grouped[categoryId]) {
-        grouped[categoryId] = {
-          name: group.categories?.name || "Uncategorized",
-          groups: [],
-        };
+      if (categoryId && grouped[categoryId]) {
+        grouped[categoryId].groups.push(group);
+      } else {
+        grouped["uncategorized"].groups.push(group);
       }
-      grouped[categoryId].groups.push(group);
     });
+
     return grouped;
   };
 
@@ -83,7 +108,7 @@ const GroupsList = () => {
                         {group.description}
                       </p>
                       <p className="text-sm text-gray-400 mb-4">
-                        Category: {group.categories?.name}
+                        Category: {group.categories?.name || "Uncategorized"}
                       </p>
                       <button
                         onClick={() => handleJoin(group.link)}
