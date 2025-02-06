@@ -17,7 +17,6 @@ export default function App() {
          <Route path="/profile" element={<Profile />} />
         <Route path="/groups" element={<GroupsList />} />
         <Route path="/groups/new" element={<NewGroup />} />
-         <Route path="/category/:categoryId" element={<CategoryPage />} /> 
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </Background>
