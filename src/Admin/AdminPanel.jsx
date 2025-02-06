@@ -5,7 +5,8 @@ import Navigation from "./components/Navigation";
 import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
 import GroupsManagement from "./components/GroupsManagement";
-import Bulkupload from "./components/Bulkupload";
+import Settings from "./components/Settings";
+import BulkUpload from "./components/Bulkupload";
 
 const AdminPanel = () => {
   // States
@@ -62,7 +63,6 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500">
       {/* Navigation Bar */}
-      
       <Navigation 
         sidebarOpen={sidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
@@ -79,15 +79,30 @@ const AdminPanel = () => {
           <Login email={email} setEmail={setEmail} password={password} setPassword={setPassword} handleLogin={handleLogin} message={message} />
         ) : (
           <>
-           <GroupsManagement 
-  groups={groups} 
-  showAddForm={showAddForm} 
-  setShowAddForm={setShowAddForm} 
-  isBulkUpload={isBulkUpload}  
-  setIsBulkUpload={setIsBulkUpload}  
-/>
+            <GroupsManagement 
+              groups={groups} 
+              showAddForm={showAddForm} 
+              setShowAddForm={setShowAddForm} 
+              isBulkUpload={isBulkUpload} 
+              setIsBulkUpload={setIsBulkUpload} 
+            />
 
-                
+            {/* Settings Modal */}
+            <AnimatePresence>
+              {showSettingsForm && (
+                <motion.div
+                  className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Settings setShowSettingsForm={setShowSettingsForm} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
+      </main>
     </div>
   );
 };
