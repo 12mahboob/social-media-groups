@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../config/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
@@ -9,6 +10,7 @@ const GroupsList = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   const fetchGroups = async () => {
     setLoading(true);
@@ -50,8 +52,14 @@ const GroupsList = () => {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
       {/* Navbar */}
-      <nav className="bg-blue-600 text-white p-4 shadow-md">
+      <nav className="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
         <h1 className="text-xl font-bold">Community Groups</h1>
+        <button 
+          onClick={() => navigate("/bad/new")}
+          className="bg-white text-blue-600 px-4 py-2 rounded-lg shadow-md hover:bg-gray-200"
+        >
+          Add New Group
+        </button>
       </nav>
 
       <div className="p-8 max-w-6xl mx-auto">
