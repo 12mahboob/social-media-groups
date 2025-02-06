@@ -22,7 +22,7 @@ const GroupsList = () => {
       const { data: groups, error: groupsError } = await supabase
         .from("groups")
         .select("*, categories(name)")
-        .eq("categories.id", "category_id")
+        .eq("categories.id", "id")
         .order("category_id", { ascending: true });
 
       if (groupsError) throw groupsError;
