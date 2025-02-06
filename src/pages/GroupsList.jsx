@@ -22,7 +22,7 @@ const GroupsList = () => {
       const { data: groups, error: groupsError } = await supabase
         .from("groups")
         .select("*, categories(name)")
-        .order("category_id", { ascending: true });
+        .order("created_at", { ascending: false }); // Sort by created_at (newest first)
 
       if (groupsError) throw groupsError;
 
